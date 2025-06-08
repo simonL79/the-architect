@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Architect — Multi-Tab</title>
+  <style>
+    body { margin: 0; display: flex; height: 100vh; background: #1c1c1c; color: #e0e0e0; font-family: sans-serif; }
+    .sidebar { width: 240px; background: #111; padding: 10px; border-right: 1px solid #333; overflow-y: auto; }
+    .main { flex: 1; display: flex; flex-direction: column; padding: 10px; }
+
+    .info-bar { text-align: right; margin-bottom: 10px; font-size: 14px; }
+    .tabs { display: flex; gap: 5px; margin-bottom: 10px; }
+    .tabs button {
+      padding: 5px 10px;
+      background: #222;
+      color: #00ffd0;
+      border: 1px solid #444;
+      cursor: pointer;
+    }
+    .tabs button.active {
+      background: #00ffd0;
+      color: #000;
+    }
+
+    #editor { height: 300px; border: 1px solid #444; margin-bottom: 10px; }
+    textarea, iframe, .terminal {
+      width: 100%;
+      border: 1px solid #444;
+      margin-bottom: 10px;
+    }
+    textarea { background: #222; color: #fff; padding: 10px; height: 100px; }
+    iframe { height: 250px; background: #fff; }
+    .terminal {
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      height: 120px;
+      overflow-y: auto;
+      padding: 10px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+</head>
+<body>
+  <div class="sidebar">
+    <h3>📁 Files</h3>
+    <div id="fileList"></div>
+    <button onclick="downloadZip()">📦 Export</button>
+  </div>
+
+  <div class="main">
+    <div class="info-bar">
+      Logged in as: {{ username }} ({{ role }}) | <a href="/logout">Logout</a>
+    </div>
+
+    <div class="tabs" id="tabBar"></div>
+
+    <div id="editor">Loading editor...</div>
+
+    <button onclick="askArchitect()">🧠 Ask Architect</button>
+    <button onclick="simulateDeploy()">🚀 Simulate Deploy</button>
+
+    <h4>🧠 Architect's Response</h4>
+    <textarea id="aiOutput" readonly></textarea>
+
+    <h4>🌐 Live Preview</h4>
+    <iframe id="preview"></iframe>
+
+    <h4>🧪 Terminal</h4>
+    <div class="terminal" id="terminal">> Ready...</div>
+  </div>
+
+  <script>
+    let editor, openFiles = {}, activeFile = null;
+
+    require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+    require(["vs/editor/editor.main"], function () {
+      editor = monaco.editor.create(document.getElementById('editor'), {
+        value: "// Select a file...",
+        language: "python",
+        theme: "vs-dark",
+        fontSize: 14
+      });
+      loadFiles();
+      autoSaveLoop();
+    });
+
+    async function loadFiles() {
+      const res = await fetch("/files");
+      const files = await res.json();
+      const fileList = document.getElementById("fileList");
+      fileList.innerHTML = "";
+
+      files.forEach(name => {
+        const el = document.createElement("div");
+        el.textContent = name;
+        el.style.cursor = "pointer";
+        el.onclick = () => openFile(name);
+        fileList.appendChild(el);
+      });
+    }
+
+    async function openFile(name) {
+      if (openFiles[name]) {
+        switchTab(name);
+        return;
+      }
+
+      const res = await fetch("/files/load", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename: name })
+      });
+      const data = await res.json();
+      openFiles[name] = { content: data.content };
+      switchTab(name);
+    }
+
+    function switchTab(name) {
+      if (activeFile) {
+        openFiles[activeFile].content = editor.getValue();
+      }
+      activeFile = name;
+      editor.setValue(openFiles[name].content);
+      updateTabs();
+      if (name.endsWith(".html")) {
+        document.getElementById("preview").srcdoc = openFiles[name].content;
+      }
+    }
+
+    function updateTabs() {
+      const tabBar = document.getElementById("tabBar");
+      tabBar.innerHTML = "";
+      Object.keys(openFiles).forEach(name => {
+        const btn = document.createElement("button");
+        btn.textContent = name;
+        btn.className = name === activeFile ? "active" : "";
+        btn.onclick = () => switchTab(name);
+        tabBar.appendChild(btn);
+      });
+    }
+
+    function autoSaveLoop() {
+      setInterval(async () => {
+        if (!activeFile) return;
+        const content = editor.getValue();
+        if (openFiles[activeFile].content === content) return;
+
+        openFiles[activeFile].content = content;
+        await fetch("/files/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename: activeFile, content })
+        });
+        await fetch("/files/version", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename: activeFile, content })
+        });
+        logTerminal(`💾 Auto-saved ${activeFile}`);
+      }, 5000);
+    }
+
+    async function askArchitect() {
+      const code = editor.getValue();
+      const res = await fetch("/ai/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code })
+      });
+      const data = await res.json();
+      document.getElementById("aiOutput").value = data.response || data.error;
+    }
+
+    function simulateDeploy() {
+      logTerminal("🚀 Simulating: python app.py");
+      setTimeout(() => logTerminal(" * Running on http://127.0.0.1:5000/"), 1000);
+      setTimeout(() => logTerminal(" * Press CTRL+C to quit"), 2000);
+    }
+
+    function logTerminal(msg) {
+      const terminal = document.getElementById("terminal");
+      terminal.textContent += "\n> " + msg;
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function downloadZip() {
+      window.location.href = "/download";
+    }
+  </script>
+</body>
+</html>
+
+

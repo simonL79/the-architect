@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Builder</title>
+</head>
+<body>
+  <h1>AI Code Generator</h1>
+  <form id="prompt-form">
+    <label for="instruction">Enter instruction:</label><br>
+    <textarea id="instruction" rows="4" cols="50" required></textarea><br><br>
+    <button type="submit">Send to AI</button>
+  </form>
+
+  <h2>Response:</h2>
+  <pre id="response"></pre>
+
+  <script>
+    const form = document.getElementById('prompt-form');
+    const responseBox = document.getElementById('response');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const instruction = document.getElementById('instruction').value;
+
+      responseBox.textContent = "Generating...";
+
+      const res = await fetch('/build', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ instruction })
+      });
+
+      const data = await res.json();
+      responseBox.textContent = data.response || "Error: " + JSON.stringify(data);
+    });
+  </script>
+</body>
+</html>
