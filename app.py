@@ -4,7 +4,7 @@ from ai_builder import run_gpt_command
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
+# Load .flaskenv or production env
 load_dotenv(dotenv_path=".flaskenv")
 
 app = Flask(__name__)
@@ -15,7 +15,7 @@ def execute_command():
     data = request.get_json()
     command = data.get("command", "")
 
-    # ✅ This line is the key — calls GPT
+    # ✅ Real GPT call — NOT a placeholder
     result = run_gpt_command(command)
 
     return jsonify({
@@ -24,5 +24,5 @@ def execute_command():
     })
 
 if __name__ == "__main__":
-   port = int(os.environ.get("PORT", 5000))
-app.run(host="0.0.0.0", port=port, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
