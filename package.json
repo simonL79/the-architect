@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "npm run vitebuild",
-    "vitebuild": "vite build",
-    "serve": "vite preview"
-  },
+  "dev": "vite",
+  "vitebuild": "vite build",
+  "build": "npm run vitebuild",
+  "serve": "vite preview"
+}
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
