@@ -1,5 +1,4 @@
-import GPTConsole from "./components/GPTConsole";
-
+import React, { useState } from "react";
 function App() {
   return (
     <div className="p-8">
