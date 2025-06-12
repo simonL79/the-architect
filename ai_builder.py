@@ -1,6 +1,4 @@
-
 import os
-import openai
 from openai import OpenAI
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -19,3 +17,4 @@ def run_gpt_command(prompt: str) -> str:
         return response.choices[0].message.content.strip()
     except Exception as e:
         return f"[Error]: {str(e)}"
+
