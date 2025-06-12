@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Architect - Command Room</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    body {
+      font-family: 'Fira Code', monospace;
+      background: #0a0a0a;
+      color: #d0f0ff;
+      padding: 2rem;
+    }
+    h1, h2 {
+      color: #00ffc3;
+    }
+    textarea, pre {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      color: #00ffcc;
+      border: 1px solid #444;
+      padding: 1rem;
+      margin-top: 1rem;
+      backdrop-filter: blur(6px);
+    }
+    .terminal, .status, .response {
+      margin-top: 2rem;
+      border-top: 1px solid #333;
+      padding-top: 1rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1.5rem;
+      background-color: #111;
+      border: 1px solid #444;
+      color: #0ff;
+      cursor: pointer;
+    }
+    a {
+      color: #0ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛰️ Command Room</h1>
+  <p>Welcome, {{ current_user.username }} | <a href="{{ url_for('logout') }}">Logout</a></p>
+
+  <form method="post">
+    <label for="prompt"><strong>Command your AI agent:</strong></label>
+    <textarea name="prompt" rows="6" placeholder="e.g., Deploy a container to Render using Python and Docker." required></textarea>
+    <br>
+    <button type="submit">⚙️ Deploy via GPT</button>
+  </form>
+
+  <div class="terminal">
+    <h2>🪐 Terminal Logs</h2>
+    <pre>{{ terminal_log }}</pre>
+  </div>
+
+  {% if response %}
+  <div class="response">
+    <h2>🧠 AI Response</h2>
+    <pre>{{ response }}</pre>
+  </div>
+  {% endif %}
+
+  <div class="status">
+    <h2>🧰 System Status</h2>
+    <p>CPU: {{ cpu }}%</p>
+    <p>RAM: {{ ram }}%</p>
+  </div>
+</body>
+</html>

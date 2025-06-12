@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Command Room</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00ffe7;
+            font-family: Consolas, monospace;
+            padding: 30px;
+        }
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+        }
+        .command-block {
+            background: #101010;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00ffe7;
+        }
+        button {
+            background: #00ffe7;
+            color: #000;
+            font-weight: bold;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0ff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mission Command Room</h1>
+
+    <div class="command-block">
+        <p><strong>Status:</strong> All systems online.</p>
+        <button onclick="location.href='/dashboard'">Return to Dashboard</button>
+    </div>
+
+    <div class="command-block">
+        <p><strong>Execute a mission profile:</strong></p>
+        <button onclick="alert('⚠️ Mission profile system not implemented yet.')">Blacksite Uplink</button>
+    </div>
+
+    <div class="command-block">
+        <p><strong>Upcoming:</strong> DevGPT, Script Insight AI, HUD Dashboard, VoiceOps triggers.</p>
+    </div>
+</body>
+</html>
+

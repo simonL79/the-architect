@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Architect Dashboard</title>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #00ffe7;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 30px;
+        }
+        h1 {
+            margin-top: 0;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #00ffe7;
+            color: #0a0a0a;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0ff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome, {{ user.username }}</h1>
+
+    <div class="section">
+        <h2>System Controls</h2>
+        <button onclick="getStatus()">Check System Load</button>
+        <button onclick="runCommand()">Run GPT Command</button>
+    </div>
+
+    <div class="section">
+        <h2>Output</h2>
+        <pre id="output">-- waiting --</pre>
+    </div>
+
+    <div class="section">
+        <a href="/logout" style="color: #ff5555;">Logout</a>
+    </div>
+
+    <script>
+        function getStatus() {
+            fetch('/system').then(res => res.json()).then(data => {
+                document.getElementById('output').innerText =
+                    `CPU: ${data.cpu}%\nRAM: ${data.memory}%`;
+            });
+        }
+
+    <script>
+    function runCommand() {
+        const promptText = prompt("Enter command for Architect:");
+        if (!promptText) return;
+
+        fetch('/ask', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: promptText })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('output').innerText = data.response;
+        })
+        .catch(error => {
+            document.getElementById('output').innerText = '❌ Error: ' + error;
+        });
+    }
+</script>
+<script>
+    function runCommand() {
+        const promptText = prompt("Enter command for Architect:");
+        if (!promptText) return;
+
+        fetch('/ask', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: promptText })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('output').innerText = data.response;
+        })
+        .catch(error => {
+            document.getElementById('output').innerText = '❌ Error: ' + error;
+        });
+    }
+</script>
+</body>
+</html>

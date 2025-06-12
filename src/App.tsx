@@ -1,12 +1,12 @@
 import React from 'react';
+import ArchitectLayout from './components/ArchitectLayout';
 import GPTConsole from './components/GPTConsole';
 
 const App: React.FC = () => {
   return (
-    <div>
-      <h1>🧠 The Architect Dashboard</h1>
+    <ArchitectLayout>
       <GPTConsole />
-    </div>
+    </ArchitectLayout>
   );
 };
 

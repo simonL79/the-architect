@@ -1,0 +1,18 @@
+{
+  "blacksite_uplink": {
+    "description": "Runs system check and initializes uplink procedures.",
+    "steps": [
+      {"action": "check_system_load"},
+      {"action": "run_script", "params": "scripts\\uplink_initializer.ps1"},
+      {"action": "speak", "params": "Uplink complete. Standing by for further orders."}
+    ]
+  },
+  "diagnostic_sweep": {
+    "description": "Full diagnostics check.",
+    "steps": [
+      {"action": "check_system_load"},
+      {"action": "run_script", "params": "scripts\\diagnostics.ps1"},
+      {"action": "speak", "params": "Diagnostics complete and logged."}
+    ]
+  }
+}
