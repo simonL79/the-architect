@@ -1,6 +1,6 @@
 import React from 'react';
-import ArchitectLayout from './components/ArchitectLayout';
 import GPTConsole from './components/GPTConsole';
+import ArchitectLayout from './components/ArchitectLayout';
 
 const App: React.FC = () => {
   return (
@@ -11,3 +11,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

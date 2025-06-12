@@ -4,15 +4,24 @@ const GPTConsole: React.FC = () => {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/execute`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ command: input }),
-    });
-    const data = await res.json();
-    setOutput(JSON.stringify(data, null, 2));
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Prevent form refresh
+
+    if (!input.trim()) return;
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/execute`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: input }),
+      });
+
+      const data = await res.json();
+      setOutput(JSON.stringify(data, null, 2));
+    } catch (err) {
+      setOutput(`Request failed: ${err}`);
+    }
+
     setInput('');
   };
 
@@ -22,11 +31,11 @@ const GPTConsole: React.FC = () => {
         type="text"
         value={input}
         onChange={e => setInput(e.target.value)}
-        className="bg-transparent border-b-2 border-accent text-accent text-lg focus:outline-none"
         placeholder="> Enter command"
+        className="bg-black border-b-2 border-accent text-accent p-2 text-lg focus:outline-none"
       />
       {output && (
-        <pre className="bg-black/40 p-3 rounded text-sm whitespace-pre-wrap text-white border border-accent/30">
+        <pre className="bg-black/50 p-4 rounded text-sm text-white whitespace-pre-wrap">
           {output}
         </pre>
       )}
@@ -35,3 +44,4 @@ const GPTConsole: React.FC = () => {
 };
 
 export default GPTConsole;
+
