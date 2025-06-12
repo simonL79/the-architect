@@ -5,7 +5,7 @@ const GPTConsole: React.FC = () => {
   const [output, setOutput] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent form refresh
+    e.preventDefault();
 
     if (!input.trim()) return;
 
@@ -30,7 +30,7 @@ const GPTConsole: React.FC = () => {
       <input
         type="text"
         value={input}
-        onChange={e => setInput(e.target.value)}
+        onChange={(e) => setInput(e.target.value)}
         placeholder="> Enter command"
         className="bg-black border-b-2 border-accent text-accent p-2 text-lg focus:outline-none"
       />
@@ -44,4 +44,5 @@ const GPTConsole: React.FC = () => {
 };
 
 export default GPTConsole;
+
 
