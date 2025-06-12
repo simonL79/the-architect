@@ -1,9 +1,13 @@
-import GPTConsole from "./components/GPTConsole";
+import React from 'react';
+import GPTConsole from './components/GPTConsole';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="p-8">
+    <div>
+      <h1>🧠 The Architect Dashboard</h1>
       <GPTConsole />
     </div>
   );
-}
+};
+
+export default App;
