@@ -1,6 +1,6 @@
-��_ _ p y c a c h e _ _ /  
+��_ _ p y c a c h e _ _ /  
  * . p y c  
  . e n v  
  
 .vercel
-voiceops-venv/node_modules/dist/build/*.log
+voiceops-venv/node_modules/dist/build/*.log# Ignore virtual environmentvoiceops-venv/
