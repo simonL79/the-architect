@@ -1,16 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login</title>
+    <meta charset="UTF-8">
+    <title>Architect Login</title>
+    <style>
+        body {
+            background: #111;
+            color: #eee;
+            font-family: monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        form {
+            background: #1c1c1c;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 12px #00ffe7;
+        }
+        input {
+            display: block;
+            margin: 15px 0;
+            padding: 8px;
+            width: 100%;
+            background: #2c2c2c;
+            color: #fff;
+            border: none;
+            border-bottom: 2px solid #00ffe7;
+        }
+        button {
+            background: #00ffe7;
+            color: #000;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-  <h2>Login</h2>
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.username.label }} {{ form.username(size=32) }}<br><br>
-    {{ form.password.label }} {{ form.password(size=32) }}<br><br>
-    {{ form.submit() }}
-  </form>
-  <p>Don't have an account? <a href="/register">Register here</a></p>
+    <form method="POST">
+        <h2>Login to Command Core</h2>
+        <input name="username" placeholder="Username" required />
+        <input name="password" placeholder="Password" type="password" required />
+        <button type="submit">Enter</button>
+        <p><a href="/register" style="color: #00ffe7;">Register instead</a></p>
+    </form>
 </body>
 </html>
+
+
