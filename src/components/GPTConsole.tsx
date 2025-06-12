@@ -48,3 +48,4 @@ export default GPTConsole;
 
 // ⬇ final build unlock
 
+// Force new SHA for Vercel rebuild
