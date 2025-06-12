@@ -1,3 +1,4 @@
+// Forced change to trigger clean rebuild
 import React, { useState } from 'react';
 
 const GPTConsole: React.FC = () => {
@@ -44,5 +45,6 @@ const GPTConsole: React.FC = () => {
 };
 
 export default GPTConsole;
+
 
 
